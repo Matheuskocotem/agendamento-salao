@@ -1,14 +1,7 @@
 const mongoose = require('mongoose');
-const URI = '';
-
-
-mongoose.set('useNewUrlParser', true);
-mongoose.set('useFindAndModify', false);
-mongoose.set('useCreateIndex', true);
-mongoose.set('useUnifiedTopology', true);
+const URI = 'mongodb+srv://salaoUser:brIBzx32MiodJOD3@cluster0.lky72.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
 
 mongoose
     .connect(URI)
     .then(() => console.log('Db is Up!'))
-    .catch(() => console.log('err'));
-
+    .catch((err) => console.log('Error:', err));

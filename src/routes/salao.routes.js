@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Salao = require('../models/salao');
+const Servico = require('../models/servico');
 
 router.post('/', async (req, res) => {
     console.log(req.body);
@@ -14,5 +15,22 @@ router.post('/', async (req, res) => {
     }
 });
 
+router.get('/servicos/:salaoId', async (req, res) => {
+    console.log(req.body);
+    try {
+        const { salaoId } = req.params;  
+        const servico = await Servico.find({
+            salaoId,
+            status: 'A'
+        }).select('_id titulo');
+
+        res.json({
+            servicos: servicos.map(s => ({ label: s.titulo, value: s._id })),
+        });
+
+    } catch (error) {
+        res.json({ error: true, message: err.message });
+    }
+});
 
 module.exports = router;

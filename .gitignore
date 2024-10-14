@@ -4,13 +4,12 @@
 /node_modules
 /.pnp
 .pnp.js
-
+/aws.js
 # testing
 /coverage
 
 # production
 /build
-/aws.js
 # misc
 .DS_Store
 .env

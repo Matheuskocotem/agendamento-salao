@@ -1,31 +1,47 @@
-const AWS = require('aws-sdk');
-const s3 = new AWS.S3({
-  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-  region: process.env.AWS_REGION,
+const { S3 } = require('@aws-sdk/client-s3');
+
+const s3 = new S3({
+    region: '',//us-east-2
+    credentials: {
+        accessKeyId: '', //AKIARYEUCHYKO76C36GT IAM_USER_KEY
+        secretAccessKey: '', //n6RHhI1ZfTfce8cfFAiX3V229qBIB36jgmiuOdrB IAM_USER_SECRET
+    },
 });
 
-const uploadToS3 = (fileStream, filePath) => {
-  const params = {
-    Bucket: process.env.AWS_BUCKET_NAME,
-    Key: filePath,
-    Body: fileStream,
-    ContentType: 'image/png', // Você pode ajustar isso conforme o tipo de arquivo
-  };
+const BUCKET_NAME = ''; // salao-puava-dev
 
-  return s3.upload(params).promise();
+const uploadToS3 = async (file, path) => {
+    const params = {
+        Bucket: BUCKET_NAME,
+        Key: path,
+        Body: file.data,
+        ContentType: file.mimetype,
+        ACL: 'public-read', // ou outra ACL conforme necessário
+    };
+
+    try {
+        const data = await s3.putObject(params);
+        return { error: false, data };
+    } catch (err) {
+        return { error: true, message: err };
+    }
 };
 
-const deleteFileS3 = (filePath) => {
-  const params = {
-    Bucket: process.env.AWS_BUCKET_NAME,
-    Key: filePath,
-  };
+const deleteFileS3 = async (filePath) => {
+    const params = {
+        Bucket: BUCKET_NAME,
+        Key: filePath,
+    };
 
-  return s3.deleteObject(params).promise();
+    try {
+        await s3.deleteObject(params);
+        return { error: false };
+    } catch (err) {
+        return { error: true, message: err };
+    }
 };
 
 module.exports = {
-  uploadToS3,
-  deleteFileS3,
+    uploadToS3,
+    deleteFileS3,
 };
